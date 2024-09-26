@@ -23,6 +23,7 @@ extern "C" {
 
 static int router_sockfd = -1;
 static string ack_data;
+int io_flag = 0;
 
 static string tokens_to_string(const vector<string> &tokens) {
     string s = tokens[0];
@@ -37,6 +38,21 @@ static bool check_warn_args(unsigned required, const vector<string> &tokens) {
         return false;
     }
     return true;
+}
+
+
+
+static int inc_io_delay(const vector<string> &tokens) {
+    if(!check_warn_args(2, tokens)) return 1;
+    int ms = stoi(tokens[1]);
+    io_flag = ms;
+    return 0;
+}
+
+static int inc_io_failure(const vector<string> &tokens) {
+    if(!check_warn_args(1, tokens)) return 1;
+    io_flag = -1;
+    return 0;
 }
 
 static int inc_time_ns(const vector<string> &tokens) {
@@ -158,6 +174,8 @@ static void do_router_cmd() {
     ssize_t size;
     map<string, int (*)(const vector<string> &)> cmd_map = {
             {"inc_time_ns", inc_time_ns},
+            {"inc_io_delay", inc_io_delay},
+            {"inc_io_failure", inc_io_failure},
             {"inc_time_us", inc_time_us},
             {"inc_time_ms", inc_time_ms},
             {"check_has_recv_queue", check_has_recv_queue},

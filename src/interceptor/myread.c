@@ -1,6 +1,7 @@
 #include "common.h"
 #include "config.h"
 #include "myread.h"
+#include "myMap.h"
 
 MAKE_SYS_TEMPLATE(ssize_t, read, int fd, void *buf, size_t count) {
     ssize_t ret = real_read(fd, buf, count);
@@ -9,6 +10,13 @@ MAKE_SYS_TEMPLATE(ssize_t, read, int fd, void *buf, size_t count) {
     if (check_res.sin_port != 0) {
         LOG_INTERCEPTED(CUR_SYSCALL, "read from " ADDR_FMT ", return %d, read(fd: %d, buf: %p, count: %ld)",
                         ADDR_TO_STR(&check_res), ret, fd, buf, count);
+    }
+    else{
+        // 并非从网络读时 
+        char *path = map_search(fd);
+        LOG_INTERCEPTED(CUR_SYSCALL, "read from file: %s, return %d, read(fd: %d, buf: %p, count: %ld)",
+                        path, ret, fd, buf, count);
+            
     }
     END_INTERCEPT;
 }

@@ -10,6 +10,8 @@
 //#endif
 #include <fcntl.h>  // O_CREAT and O_TMPFILE
 #include <stdarg.h>
+#include "myMap.h"
+#include <stdio.h>
 
 MAKE_SYS_TEMPLATE(int, open, const char *pathname, int flags, ...) {
     int ret;
@@ -27,8 +29,9 @@ MAKE_SYS_TEMPLATE(int, open, const char *pathname, int flags, ...) {
     }
     else
         ret = real_open(pathname, flags);
+    map_insert(ret, pathname);
     BEGIN_INTERCEPT;
-//    LOG_INTERCEPTED(CUR_SYSCALL, "return %d, open(pathname: \"%s\", flags: 0x%X, mode: %04o)",
-//                    ret, rstr1(pathname), flags, mode);
+    LOG_INTERCEPTED(CUR_SYSCALL, "return %d, open(pathname: \"%s\", flags: 0x%X, mode: %04o)",
+                    ret, rstr1(pathname), flags, mode);
     END_INTERCEPT;
 }

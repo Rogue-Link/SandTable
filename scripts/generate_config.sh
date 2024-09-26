@@ -66,6 +66,7 @@ check_args "$SUBNET" "$TRACE_FILE"
 echo "map-cidr $SUBNET ${MASQUERADE:-10.255.255.0/24}"
 echo "strategy file $TRACE_FILE"
 #echo "strategy cmd"
+#echo "strategy direct"
 
 if test -z "$BACKEND"; then
     if ! test -f "/.dockerenv"; then

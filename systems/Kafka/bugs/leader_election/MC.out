@@ -1,0 +1,809 @@
+---------------- MODULE /home/ubuntu/SandTable/systems/Kafka/specs/sim/sim_2024-07-05_14-58-17_2/trace_1_2 -----------------
+\* <Init line 79, col 9 to line 84, col 18 of module Kafka>
+STATE_1 == 
+/\ msgs = ( n1 :> (n2 :> <<>> @@ n3 :> <<>>) @@
+  n2 :> (n1 :> <<>> @@ n3 :> <<>>) @@
+  n3 :> (n1 :> <<>> @@ n2 :> <<>>) )
+/\ leader = (n1 :> Nil @@ n2 :> Nil @@ n3 :> Nil)
+/\ inv = <<>>
+/\ pendingFetch = (n1 :> Nil @@ n2 :> Nil @@ n3 :> Nil)
+/\ netcmd = <<<<"init", 3>>>>
+/\ requestQueue = ( n1 :> (n1 :> {} @@ n2 :> {} @@ n3 :> {}) @@
+  n2 :> (n1 :> {} @@ n2 :> {} @@ n3 :> {}) @@
+  n3 :> (n1 :> {} @@ n2 :> {} @@ n3 :> {}) )
+/\ netman = [n_op |-> 0, n_ae |-> 0, n_elec |-> 0, no_inv |-> {}, n_sent |-> 0, n_recv |-> 0, n_wire |-> 0, n_cure |-> 0, n_part |-> 0, conn |-> <<{n1, n2, n3}>>]
+/\ currentEpoch = (n1 :> 1 @@ n2 :> 1 @@ n3 :> 1)
+/\ votedFor = (n1 :> Nil @@ n2 :> Nil @@ n3 :> Nil)
+/\ error_act = 0
+/\ state = (n1 :> Unattached @@ n2 :> Unattached @@ n3 :> Unattached)
+/\ normal_act = 0
+/\ votesGranted = (n1 :> {} @@ n2 :> {} @@ n3 :> {})
+
+
+\* <Next line 515, col 9 to line 533, col 33 of module Kafka>
+STATE_2 == 
+/\ msgs = ( n1 :> (n2 :> <<>> @@ n3 :> <<>>) @@
+  n2 :> (n1 :> <<>> @@ n3 :> <<>>) @@
+  n3 :>
+      ( n1 :>
+            << [ src |-> n3,
+                 dst |-> n1,
+                 type |-> RequestVoteRequest,
+                 mepoch |-> 2 ] >> @@
+        n2 :>
+            << [ src |-> n3,
+                 dst |-> n2,
+                 type |-> RequestVoteRequest,
+                 mepoch |-> 2 ] >> ) )
+/\ leader = (n1 :> Nil @@ n2 :> Nil @@ n3 :> Nil)
+/\ inv = <<TRUE, TRUE>>
+/\ pendingFetch = (n1 :> Nil @@ n2 :> Nil @@ n3 :> Nil)
+/\ netcmd = << <<"ElectionTimeout", n3>>,
+   <<"msg_batch_add", <<"ok", n3, n1>>, <<"ok", n3, n2>>>> >>
+/\ requestQueue = ( n1 :> (n1 :> {} @@ n2 :> {} @@ n3 :> {}) @@
+  n2 :> (n1 :> {} @@ n2 :> {} @@ n3 :> {}) @@
+  n3 :> (n1 :> {} @@ n2 :> {} @@ n3 :> {}) )
+/\ netman = [n_elec |-> 1, n_sent |-> 2, n_wire |-> 2, n_op |-> 0, n_ae |-> 0, no_inv |-> {}, n_recv |-> 0, n_cure |-> 0, n_part |-> 0, conn |-> <<{n1, n2, n3}>>]
+/\ currentEpoch = (n1 :> 1 @@ n2 :> 1 @@ n3 :> 2)
+/\ votedFor = (n1 :> Nil @@ n2 :> Nil @@ n3 :> n3)
+/\ error_act = 1
+/\ state = (n1 :> Unattached @@ n2 :> Unattached @@ n3 :> Candidate)
+/\ normal_act = 0
+/\ votesGranted = (n1 :> {} @@ n2 :> {} @@ n3 :> {n3})
+
+
+\* <Next line 515, col 9 to line 533, col 33 of module Kafka>
+STATE_3 == 
+/\ msgs = ( n1 :> (n2 :> <<>> @@ n3 :> <<>>) @@
+  n2 :>
+      ( n1 :> <<>> @@
+        n3 :>
+            << [ type |-> RequestVoteResponse,
+                 mepoch |-> 2,
+                 mleader |-> Nil,
+                 mvoteGranted |-> TRUE,
+                 merror |-> Nil,
+                 src |-> n2,
+                 dst |-> n3 ] >> ) @@
+  n3 :>
+      ( n1 :>
+            << [ src |-> n3,
+                 dst |-> n1,
+                 type |-> RequestVoteRequest,
+                 mepoch |-> 2 ] >> @@
+        n2 :> <<>> ) )
+/\ leader = (n1 :> Nil @@ n2 :> Nil @@ n3 :> Nil)
+/\ inv = <<TRUE, TRUE>>
+/\ pendingFetch = (n1 :> Nil @@ n2 :> Nil @@ n3 :> Nil)
+/\ netcmd = <<<<"HandleMsgRV", "voted", n2, n3>>, <<"msg_reply", n2, n3>>>>
+/\ requestQueue = ( n1 :> (n1 :> {} @@ n2 :> {} @@ n3 :> {}) @@
+  n2 :> (n1 :> {} @@ n2 :> {} @@ n3 :> {}) @@
+  n3 :> (n1 :> {} @@ n2 :> {} @@ n3 :> {}) )
+/\ netman = [n_sent |-> 3, n_recv |-> 1, n_elec |-> 1, n_wire |-> 2, n_op |-> 0, n_ae |-> 0, no_inv |-> {}, n_cure |-> 0, n_part |-> 0, conn |-> <<{n1, n2, n3}>>]
+/\ currentEpoch = (n1 :> 1 @@ n2 :> 2 @@ n3 :> 2)
+/\ votedFor = (n1 :> Nil @@ n2 :> n3 @@ n3 :> n3)
+/\ error_act = 1
+/\ state = (n1 :> Unattached @@ n2 :> Voted @@ n3 :> Candidate)
+/\ normal_act = 1
+/\ votesGranted = (n1 :> {} @@ n2 :> {} @@ n3 :> {n3})
+
+
+\* <Next line 515, col 9 to line 533, col 33 of module Kafka>
+STATE_4 == 
+/\ msgs = ( n1 :>
+      ( n2 :> <<>> @@
+        n3 :>
+            << [ type |-> RequestVoteResponse,
+                 mepoch |-> 2,
+                 mleader |-> Nil,
+                 mvoteGranted |-> TRUE,
+                 merror |-> Nil,
+                 src |-> n1,
+                 dst |-> n3 ] >> ) @@
+  n2 :>
+      ( n1 :> <<>> @@
+        n3 :>
+            << [ type |-> RequestVoteResponse,
+                 mepoch |-> 2,
+                 mleader |-> Nil,
+                 mvoteGranted |-> TRUE,
+                 merror |-> Nil,
+                 src |-> n2,
+                 dst |-> n3 ] >> ) @@
+  n3 :> (n1 :> <<>> @@ n2 :> <<>>) )
+/\ leader = (n1 :> Nil @@ n2 :> Nil @@ n3 :> Nil)
+/\ inv = <<TRUE, TRUE>>
+/\ pendingFetch = (n1 :> Nil @@ n2 :> Nil @@ n3 :> Nil)
+/\ netcmd = <<<<"HandleMsgRV", "voted", n1, n3>>, <<"msg_reply", n1, n3>>>>
+/\ requestQueue = ( n1 :> (n1 :> {} @@ n2 :> {} @@ n3 :> {}) @@
+  n2 :> (n1 :> {} @@ n2 :> {} @@ n3 :> {}) @@
+  n3 :> (n1 :> {} @@ n2 :> {} @@ n3 :> {}) )
+/\ netman = [n_sent |-> 4, n_recv |-> 2, n_elec |-> 1, n_wire |-> 2, n_op |-> 0, n_ae |-> 0, no_inv |-> {}, n_cure |-> 0, n_part |-> 0, conn |-> <<{n1, n2, n3}>>]
+/\ currentEpoch = (n1 :> 2 @@ n2 :> 2 @@ n3 :> 2)
+/\ votedFor = (n1 :> n3 @@ n2 :> n3 @@ n3 :> n3)
+/\ error_act = 1
+/\ state = (n1 :> Voted @@ n2 :> Voted @@ n3 :> Candidate)
+/\ normal_act = 2
+/\ votesGranted = (n1 :> {} @@ n2 :> {} @@ n3 :> {n3})
+
+
+\* <Next line 515, col 9 to line 533, col 33 of module Kafka>
+STATE_5 == 
+/\ msgs = ( n1 :>
+      ( n2 :> <<>> @@
+        n3 :>
+            << [ type |-> RequestVoteResponse,
+                 mepoch |-> 2,
+                 mleader |-> Nil,
+                 mvoteGranted |-> TRUE,
+                 merror |-> Nil,
+                 src |-> n1,
+                 dst |-> n3 ] >> ) @@
+  n2 :> (n1 :> <<>> @@ n3 :> <<>>) @@
+  n3 :>
+      ( n1 :> <<>> @@
+        n2 :>
+            << [ src |-> n3,
+                 dst |-> n2,
+                 type |-> BeginQuorumRequest,
+                 mepoch |-> 2 ] >> ) )
+/\ leader = (n1 :> Nil @@ n2 :> Nil @@ n3 :> n3)
+/\ inv = <<TRUE, TRUE>>
+/\ pendingFetch = (n1 :> Nil @@ n2 :> Nil @@ n3 :> Nil)
+/\ netcmd = << <<"HandleMsgRVR", "accept-one-and-beginQuorum", n3, n2>>,
+   <<"msg_reply", n3, n2>> >>
+/\ requestQueue = ( n1 :> (n1 :> {} @@ n2 :> {} @@ n3 :> {}) @@
+  n2 :> (n1 :> {} @@ n2 :> {} @@ n3 :> {}) @@
+  n3 :> (n1 :> {} @@ n2 :> {} @@ n3 :> {}) )
+/\ netman = [n_sent |-> 5, n_recv |-> 3, n_elec |-> 1, n_wire |-> 2, n_op |-> 0, n_ae |-> 0, no_inv |-> {}, n_cure |-> 0, n_part |-> 0, conn |-> <<{n1, n2, n3}>>]
+/\ currentEpoch = (n1 :> 2 @@ n2 :> 2 @@ n3 :> 2)
+/\ votedFor = (n1 :> n3 @@ n2 :> n3 @@ n3 :> n3)
+/\ error_act = 1
+/\ state = (n1 :> Voted @@ n2 :> Voted @@ n3 :> Leader)
+/\ normal_act = 3
+/\ votesGranted = (n1 :> {} @@ n2 :> {} @@ n3 :> {n2, n3})
+
+
+\* <Next line 515, col 9 to line 533, col 33 of module Kafka>
+STATE_6 == 
+/\ msgs = ( n1 :>
+      ( n2 :> <<>> @@
+        n3 :>
+            << [ type |-> RequestVoteResponse,
+                 mepoch |-> 2,
+                 mleader |-> Nil,
+                 mvoteGranted |-> TRUE,
+                 merror |-> Nil,
+                 src |-> n1,
+                 dst |-> n3 ] >> ) @@
+  n2 :>
+      ( n1 :> <<>> @@
+        n3 :>
+            << [ type |-> BeginQuorumResponse,
+                 mepoch |-> 2,
+                 src |-> n2,
+                 dst |-> n3,
+                 merror |-> Nil ] >> ) @@
+  n3 :> (n1 :> <<>> @@ n2 :> <<>>) )
+/\ leader = (n1 :> Nil @@ n2 :> n3 @@ n3 :> n3)
+/\ inv = <<TRUE, TRUE>>
+/\ pendingFetch = (n1 :> Nil @@ n2 :> Nil @@ n3 :> Nil)
+/\ netcmd = <<<<"HandleMsgBQ", "noerror", n2, n3>>, <<"msg_reply", n2, n3>>>>
+/\ requestQueue = ( n1 :> (n1 :> {} @@ n2 :> {} @@ n3 :> {}) @@
+  n2 :> (n1 :> {} @@ n2 :> {} @@ n3 :> {}) @@
+  n3 :> (n1 :> {} @@ n2 :> {} @@ n3 :> {}) )
+/\ netman = [n_sent |-> 6, n_recv |-> 4, n_elec |-> 1, n_wire |-> 2, n_op |-> 0, n_ae |-> 0, no_inv |-> {}, n_cure |-> 0, n_part |-> 0, conn |-> <<{n1, n2, n3}>>]
+/\ currentEpoch = (n1 :> 2 @@ n2 :> 2 @@ n3 :> 2)
+/\ votedFor = (n1 :> n3 @@ n2 :> n3 @@ n3 :> n3)
+/\ error_act = 1
+/\ state = (n1 :> Voted @@ n2 :> Follower @@ n3 :> Leader)
+/\ normal_act = 4
+/\ votesGranted = (n1 :> {} @@ n2 :> {} @@ n3 :> {n2, n3})
+
+
+\* <Next line 515, col 9 to line 533, col 33 of module Kafka>
+STATE_7 == 
+/\ msgs = ( n1 :>
+      ( n2 :> <<>> @@
+        n3 :>
+            << [ type |-> RequestVoteResponse,
+                 mepoch |-> 2,
+                 mleader |-> Nil,
+                 mvoteGranted |-> TRUE,
+                 merror |-> Nil,
+                 src |-> n1,
+                 dst |-> n3 ] >> ) @@
+  n2 :>
+      ( n1 :>
+            << [ src |-> n2,
+                 dst |-> n1,
+                 type |-> RequestVoteRequest,
+                 mepoch |-> 3 ] >> @@
+        n3 :>
+            << [ type |-> BeginQuorumResponse,
+                 mepoch |-> 2,
+                 src |-> n2,
+                 dst |-> n3,
+                 merror |-> Nil ],
+               [ src |-> n2,
+                 dst |-> n3,
+                 type |-> RequestVoteRequest,
+                 mepoch |-> 3 ] >> ) @@
+  n3 :> (n1 :> <<>> @@ n2 :> <<>>) )
+/\ leader = (n1 :> Nil @@ n2 :> Nil @@ n3 :> n3)
+/\ inv = <<TRUE, TRUE>>
+/\ pendingFetch = (n1 :> Nil @@ n2 :> Nil @@ n3 :> Nil)
+/\ netcmd = << <<"ElectionTimeout", n2>>,
+   <<"msg_batch_add", <<"ok", n2, n1>>, <<"ok", n2, n3>>>> >>
+/\ requestQueue = ( n1 :> (n1 :> {} @@ n2 :> {} @@ n3 :> {}) @@
+  n2 :> (n1 :> {} @@ n2 :> {} @@ n3 :> {}) @@
+  n3 :> (n1 :> {} @@ n2 :> {} @@ n3 :> {}) )
+/\ netman = [n_elec |-> 2, n_sent |-> 8, n_wire |-> 4, n_recv |-> 4, n_op |-> 0, n_ae |-> 0, no_inv |-> {}, n_cure |-> 0, n_part |-> 0, conn |-> <<{n1, n2, n3}>>]
+/\ currentEpoch = (n1 :> 2 @@ n2 :> 3 @@ n3 :> 2)
+/\ votedFor = (n1 :> n3 @@ n2 :> n2 @@ n3 :> n3)
+/\ error_act = 2
+/\ state = (n1 :> Voted @@ n2 :> Candidate @@ n3 :> Leader)
+/\ normal_act = 4
+/\ votesGranted = (n1 :> {} @@ n2 :> {n2} @@ n3 :> {n2, n3})
+
+
+\* <Next line 515, col 9 to line 533, col 33 of module Kafka>
+STATE_8 == 
+/\ msgs = ( n1 :>
+      ( n2 :> <<>> @@
+        n3 :>
+            << [ type |-> RequestVoteResponse,
+                 mepoch |-> 2,
+                 mleader |-> Nil,
+                 mvoteGranted |-> TRUE,
+                 merror |-> Nil,
+                 src |-> n1,
+                 dst |-> n3 ] >> ) @@
+  n2 :>
+      ( n1 :>
+            << [ src |-> n2,
+                 dst |-> n1,
+                 type |-> RequestVoteRequest,
+                 mepoch |-> 3 ] >> @@
+        n3 :>
+            << [ src |-> n2,
+                 dst |-> n3,
+                 type |-> RequestVoteRequest,
+                 mepoch |-> 3 ] >> ) @@
+  n3 :> (n1 :> <<>> @@ n2 :> <<>>) )
+/\ leader = (n1 :> Nil @@ n2 :> Nil @@ n3 :> n3)
+/\ inv = <<TRUE, TRUE>>
+/\ pendingFetch = (n1 :> Nil @@ n2 :> Nil @@ n3 :> Nil)
+/\ netcmd = <<<<"HandleMsgBQR", "get", n3, n2>>, <<"msg_del", n3, n2>>>>
+/\ requestQueue = ( n1 :> (n1 :> {} @@ n2 :> {} @@ n3 :> {}) @@
+  n2 :> (n1 :> {} @@ n2 :> {} @@ n3 :> {}) @@
+  n3 :> (n1 :> {} @@ n2 :> {} @@ n3 :> {}) )
+/\ netman = [n_wire |-> 3, n_recv |-> 5, n_elec |-> 2, n_sent |-> 8, n_op |-> 0, n_ae |-> 0, no_inv |-> {}, n_cure |-> 0, n_part |-> 0, conn |-> <<{n1, n2, n3}>>]
+/\ currentEpoch = (n1 :> 2 @@ n2 :> 3 @@ n3 :> 2)
+/\ votedFor = (n1 :> n3 @@ n2 :> n2 @@ n3 :> n3)
+/\ error_act = 2
+/\ state = (n1 :> Voted @@ n2 :> Candidate @@ n3 :> Leader)
+/\ normal_act = 5
+/\ votesGranted = (n1 :> {} @@ n2 :> {n2} @@ n3 :> {n2, n3})
+
+
+\* <Next line 515, col 9 to line 533, col 33 of module Kafka>
+STATE_9 == 
+/\ msgs = ( n1 :>
+      ( n2 :>
+            << [ type |-> RequestVoteResponse,
+                 mepoch |-> 3,
+                 mleader |-> Nil,
+                 mvoteGranted |-> TRUE,
+                 merror |-> Nil,
+                 src |-> n1,
+                 dst |-> n2 ] >> @@
+        n3 :>
+            << [ type |-> RequestVoteResponse,
+                 mepoch |-> 2,
+                 mleader |-> Nil,
+                 mvoteGranted |-> TRUE,
+                 merror |-> Nil,
+                 src |-> n1,
+                 dst |-> n3 ] >> ) @@
+  n2 :>
+      ( n1 :> <<>> @@
+        n3 :>
+            << [ src |-> n2,
+                 dst |-> n3,
+                 type |-> RequestVoteRequest,
+                 mepoch |-> 3 ] >> ) @@
+  n3 :> (n1 :> <<>> @@ n2 :> <<>>) )
+/\ leader = (n1 :> Nil @@ n2 :> Nil @@ n3 :> n3)
+/\ inv = <<TRUE, TRUE>>
+/\ pendingFetch = (n1 :> Nil @@ n2 :> Nil @@ n3 :> Nil)
+/\ netcmd = <<<<"HandleMsgRV", "voted", n1, n2>>, <<"msg_reply", n1, n2>>>>
+/\ requestQueue = ( n1 :> (n1 :> {} @@ n2 :> {} @@ n3 :> {}) @@
+  n2 :> (n1 :> {} @@ n2 :> {} @@ n3 :> {}) @@
+  n3 :> (n1 :> {} @@ n2 :> {} @@ n3 :> {}) )
+/\ netman = [n_sent |-> 9, n_recv |-> 6, n_wire |-> 3, n_elec |-> 2, n_op |-> 0, n_ae |-> 0, no_inv |-> {}, n_cure |-> 0, n_part |-> 0, conn |-> <<{n1, n2, n3}>>]
+/\ currentEpoch = (n1 :> 3 @@ n2 :> 3 @@ n3 :> 2)
+/\ votedFor = (n1 :> n2 @@ n2 :> n2 @@ n3 :> n3)
+/\ error_act = 2
+/\ state = (n1 :> Voted @@ n2 :> Candidate @@ n3 :> Leader)
+/\ normal_act = 6
+/\ votesGranted = (n1 :> {} @@ n2 :> {n2} @@ n3 :> {n2, n3})
+
+
+\* <Next line 515, col 9 to line 533, col 33 of module Kafka>
+STATE_10 == 
+/\ msgs = ( n1 :>
+      ( n2 :>
+            << [ type |-> RequestVoteResponse,
+                 mepoch |-> 3,
+                 mleader |-> Nil,
+                 mvoteGranted |-> TRUE,
+                 merror |-> Nil,
+                 src |-> n1,
+                 dst |-> n2 ] >> @@
+        n3 :>
+            << [ type |-> RequestVoteResponse,
+                 mepoch |-> 2,
+                 mleader |-> Nil,
+                 mvoteGranted |-> TRUE,
+                 merror |-> Nil,
+                 src |-> n1,
+                 dst |-> n3 ] >> ) @@
+  n2 :> (n1 :> <<>> @@ n3 :> <<>>) @@
+  n3 :>
+      ( n1 :> <<>> @@
+        n2 :>
+            << [ type |-> RequestVoteResponse,
+                 mepoch |-> 3,
+                 mleader |-> Nil,
+                 mvoteGranted |-> TRUE,
+                 merror |-> Nil,
+                 src |-> n3,
+                 dst |-> n2 ] >> ) )
+/\ leader = (n1 :> Nil @@ n2 :> Nil @@ n3 :> Nil)
+/\ inv = <<TRUE, TRUE>>
+/\ pendingFetch = (n1 :> Nil @@ n2 :> Nil @@ n3 :> Nil)
+/\ netcmd = <<<<"HandleMsgRV", "voted", n3, n2>>, <<"msg_reply", n3, n2>>>>
+/\ requestQueue = ( n1 :> (n1 :> {} @@ n2 :> {} @@ n3 :> {}) @@
+  n2 :> (n1 :> {} @@ n2 :> {} @@ n3 :> {}) @@
+  n3 :> (n1 :> {} @@ n2 :> {} @@ n3 :> {}) )
+/\ netman = [n_sent |-> 10, n_recv |-> 7, n_wire |-> 3, n_elec |-> 2, n_op |-> 0, n_ae |-> 0, no_inv |-> {}, n_cure |-> 0, n_part |-> 0, conn |-> <<{n1, n2, n3}>>]
+/\ currentEpoch = (n1 :> 3 @@ n2 :> 3 @@ n3 :> 3)
+/\ votedFor = (n1 :> n2 @@ n2 :> n2 @@ n3 :> n2)
+/\ error_act = 2
+/\ state = (n1 :> Voted @@ n2 :> Candidate @@ n3 :> Voted)
+/\ normal_act = 7
+/\ votesGranted = (n1 :> {} @@ n2 :> {n2} @@ n3 :> {n2, n3})
+
+
+\* <Next line 515, col 9 to line 533, col 33 of module Kafka>
+STATE_11 == 
+/\ msgs = ( n1 :>
+      ( n2 :>
+            << [ type |-> RequestVoteResponse,
+                 mepoch |-> 3,
+                 mleader |-> Nil,
+                 mvoteGranted |-> TRUE,
+                 merror |-> Nil,
+                 src |-> n1,
+                 dst |-> n2 ] >> @@
+        n3 :> <<>> ) @@
+  n2 :> (n1 :> <<>> @@ n3 :> <<>>) @@
+  n3 :>
+      ( n1 :> <<>> @@
+        n2 :>
+            << [ type |-> RequestVoteResponse,
+                 mepoch |-> 3,
+                 mleader |-> Nil,
+                 mvoteGranted |-> TRUE,
+                 merror |-> Nil,
+                 src |-> n3,
+                 dst |-> n2 ] >> ) )
+/\ leader = (n1 :> Nil @@ n2 :> Nil @@ n3 :> Nil)
+/\ inv = <<TRUE, TRUE>>
+/\ pendingFetch = (n1 :> Nil @@ n2 :> Nil @@ n3 :> Nil)
+/\ netcmd = << <<"HandleMsgRVR", "not-candidate-or-term-not-equal", n3, n1>>,
+   <<"msg_del", n3, n1>> >>
+/\ requestQueue = ( n1 :> (n1 :> {} @@ n2 :> {} @@ n3 :> {}) @@
+  n2 :> (n1 :> {} @@ n2 :> {} @@ n3 :> {}) @@
+  n3 :> (n1 :> {} @@ n2 :> {} @@ n3 :> {}) )
+/\ netman = [n_wire |-> 2, n_recv |-> 8, n_sent |-> 10, n_elec |-> 2, n_op |-> 0, n_ae |-> 0, no_inv |-> {}, n_cure |-> 0, n_part |-> 0, conn |-> <<{n1, n2, n3}>>]
+/\ currentEpoch = (n1 :> 3 @@ n2 :> 3 @@ n3 :> 3)
+/\ votedFor = (n1 :> n2 @@ n2 :> n2 @@ n3 :> n2)
+/\ error_act = 2
+/\ state = (n1 :> Voted @@ n2 :> Candidate @@ n3 :> Voted)
+/\ normal_act = 8
+/\ votesGranted = (n1 :> {} @@ n2 :> {n2} @@ n3 :> {n2, n3})
+
+
+\* <Next line 515, col 9 to line 533, col 33 of module Kafka>
+STATE_12 == 
+/\ msgs = ( n1 :>
+      ( n2 :>
+            << [ type |-> RequestVoteResponse,
+                 mepoch |-> 3,
+                 mleader |-> Nil,
+                 mvoteGranted |-> TRUE,
+                 merror |-> Nil,
+                 src |-> n1,
+                 dst |-> n2 ] >> @@
+        n3 :> <<>> ) @@
+  n2 :>
+      ( n1 :> <<>> @@
+        n3 :>
+            << [ src |-> n2,
+                 dst |-> n3,
+                 type |-> BeginQuorumRequest,
+                 mepoch |-> 3 ] >> ) @@
+  n3 :> (n1 :> <<>> @@ n2 :> <<>>) )
+/\ leader = (n1 :> Nil @@ n2 :> n2 @@ n3 :> Nil)
+/\ inv = <<TRUE, TRUE>>
+/\ pendingFetch = (n1 :> Nil @@ n2 :> Nil @@ n3 :> Nil)
+/\ netcmd = << <<"HandleMsgRVR", "accept-one-and-beginQuorum", n2, n3>>,
+   <<"msg_reply", n2, n3>> >>
+/\ requestQueue = ( n1 :> (n1 :> {} @@ n2 :> {} @@ n3 :> {}) @@
+  n2 :> (n1 :> {} @@ n2 :> {} @@ n3 :> {}) @@
+  n3 :> (n1 :> {} @@ n2 :> {} @@ n3 :> {}) )
+/\ netman = [n_sent |-> 11, n_recv |-> 9, n_wire |-> 2, n_elec |-> 2, n_op |-> 0, n_ae |-> 0, no_inv |-> {}, n_cure |-> 0, n_part |-> 0, conn |-> <<{n1, n2, n3}>>]
+/\ currentEpoch = (n1 :> 3 @@ n2 :> 3 @@ n3 :> 3)
+/\ votedFor = (n1 :> n2 @@ n2 :> n2 @@ n3 :> n2)
+/\ error_act = 2
+/\ state = (n1 :> Voted @@ n2 :> Leader @@ n3 :> Voted)
+/\ normal_act = 9
+/\ votesGranted = (n1 :> {} @@ n2 :> {n2, n3} @@ n3 :> {n2, n3})
+
+
+\* <Next line 515, col 9 to line 533, col 33 of module Kafka>
+STATE_13 == 
+/\ msgs = ( n1 :>
+      ( n2 :>
+            << [ type |-> RequestVoteResponse,
+                 mepoch |-> 3,
+                 mleader |-> Nil,
+                 mvoteGranted |-> TRUE,
+                 merror |-> Nil,
+                 src |-> n1,
+                 dst |-> n2 ] >> @@
+        n3 :> <<>> ) @@
+  n2 :> (n1 :> <<>> @@ n3 :> <<>>) @@
+  n3 :>
+      ( n1 :> <<>> @@
+        n2 :>
+            << [ type |-> BeginQuorumResponse,
+                 mepoch |-> 3,
+                 src |-> n3,
+                 dst |-> n2,
+                 merror |-> Nil ] >> ) )
+/\ leader = (n1 :> Nil @@ n2 :> n2 @@ n3 :> n2)
+/\ inv = <<TRUE, TRUE>>
+/\ pendingFetch = (n1 :> Nil @@ n2 :> Nil @@ n3 :> Nil)
+/\ netcmd = <<<<"HandleMsgBQ", "noerror", n3, n2>>, <<"msg_reply", n3, n2>>>>
+/\ requestQueue = ( n1 :> (n1 :> {} @@ n2 :> {} @@ n3 :> {}) @@
+  n2 :> (n1 :> {} @@ n2 :> {} @@ n3 :> {}) @@
+  n3 :> (n1 :> {} @@ n2 :> {} @@ n3 :> {}) )
+/\ netman = [n_sent |-> 12, n_recv |-> 10, n_wire |-> 2, n_elec |-> 2, n_op |-> 0, n_ae |-> 0, no_inv |-> {}, n_cure |-> 0, n_part |-> 0, conn |-> <<{n1, n2, n3}>>]
+/\ currentEpoch = (n1 :> 3 @@ n2 :> 3 @@ n3 :> 3)
+/\ votedFor = (n1 :> n2 @@ n2 :> n2 @@ n3 :> n2)
+/\ error_act = 2
+/\ state = (n1 :> Voted @@ n2 :> Leader @@ n3 :> Follower)
+/\ normal_act = 10
+/\ votesGranted = (n1 :> {} @@ n2 :> {n2, n3} @@ n3 :> {n2, n3})
+
+
+\* <Next line 515, col 9 to line 533, col 33 of module Kafka>
+STATE_14 == 
+/\ msgs = ( n1 :>
+      ( n2 :>
+            << [ type |-> RequestVoteResponse,
+                 mepoch |-> 3,
+                 mleader |-> Nil,
+                 mvoteGranted |-> TRUE,
+                 merror |-> Nil,
+                 src |-> n1,
+                 dst |-> n2 ] >> @@
+        n3 :> <<>> ) @@
+  n2 :> (n1 :> <<>> @@ n3 :> <<>>) @@
+  n3 :> (n1 :> <<>> @@ n2 :> <<>>) )
+/\ leader = (n1 :> Nil @@ n2 :> n2 @@ n3 :> n2)
+/\ inv = <<TRUE, TRUE>>
+/\ pendingFetch = (n1 :> Nil @@ n2 :> Nil @@ n3 :> Nil)
+/\ netcmd = <<<<"HandleMsgBQR", "get", n2, n3>>, <<"msg_del", n2, n3>>>>
+/\ requestQueue = ( n1 :> (n1 :> {} @@ n2 :> {} @@ n3 :> {}) @@
+  n2 :> (n1 :> {} @@ n2 :> {} @@ n3 :> {}) @@
+  n3 :> (n1 :> {} @@ n2 :> {} @@ n3 :> {}) )
+/\ netman = [n_wire |-> 1, n_recv |-> 11, n_sent |-> 12, n_elec |-> 2, n_op |-> 0, n_ae |-> 0, no_inv |-> {}, n_cure |-> 0, n_part |-> 0, conn |-> <<{n1, n2, n3}>>]
+/\ currentEpoch = (n1 :> 3 @@ n2 :> 3 @@ n3 :> 3)
+/\ votedFor = (n1 :> n2 @@ n2 :> n2 @@ n3 :> n2)
+/\ error_act = 2
+/\ state = (n1 :> Voted @@ n2 :> Leader @@ n3 :> Follower)
+/\ normal_act = 11
+/\ votesGranted = (n1 :> {} @@ n2 :> {n2, n3} @@ n3 :> {n2, n3})
+
+
+\* <Next line 515, col 9 to line 533, col 33 of module Kafka>
+STATE_15 == 
+/\ msgs = ( n1 :>
+      ( n2 :>
+            << [ type |-> RequestVoteResponse,
+                 mepoch |-> 3,
+                 mleader |-> Nil,
+                 mvoteGranted |-> TRUE,
+                 merror |-> Nil,
+                 src |-> n1,
+                 dst |-> n2 ] >> @@
+        n3 :> <<>> ) @@
+  n2 :> (n1 :> <<>> @@ n3 :> <<>>) @@
+  n3 :>
+      ( n1 :>
+            << [ src |-> n3,
+                 dst |-> n1,
+                 type |-> RequestVoteRequest,
+                 mepoch |-> 4 ] >> @@
+        n2 :>
+            << [ src |-> n3,
+                 dst |-> n2,
+                 type |-> RequestVoteRequest,
+                 mepoch |-> 4 ] >> ) )
+/\ leader = (n1 :> Nil @@ n2 :> n2 @@ n3 :> Nil)
+/\ inv = <<TRUE, TRUE>>
+/\ pendingFetch = (n1 :> Nil @@ n2 :> Nil @@ n3 :> Nil)
+/\ netcmd = << <<"ElectionTimeout", n3>>,
+   <<"msg_batch_add", <<"ok", n3, n1>>, <<"ok", n3, n2>>>> >>
+/\ requestQueue = ( n1 :> (n1 :> {} @@ n2 :> {} @@ n3 :> {}) @@
+  n2 :> (n1 :> {} @@ n2 :> {} @@ n3 :> {}) @@
+  n3 :> (n1 :> {} @@ n2 :> {} @@ n3 :> {}) )
+/\ netman = [n_elec |-> 3, n_sent |-> 14, n_wire |-> 3, n_recv |-> 11, n_op |-> 0, n_ae |-> 0, no_inv |-> {}, n_cure |-> 0, n_part |-> 0, conn |-> <<{n1, n2, n3}>>]
+/\ currentEpoch = (n1 :> 3 @@ n2 :> 3 @@ n3 :> 4)
+/\ votedFor = (n1 :> n2 @@ n2 :> n2 @@ n3 :> n3)
+/\ error_act = 3
+/\ state = (n1 :> Voted @@ n2 :> Leader @@ n3 :> Candidate)
+/\ normal_act = 11
+/\ votesGranted = (n1 :> {} @@ n2 :> {n2, n3} @@ n3 :> {n3})
+
+
+\* <Next line 515, col 9 to line 533, col 33 of module Kafka>
+STATE_16 == 
+/\ msgs = ( n1 :>
+      ( n2 :>
+            << [ type |-> RequestVoteResponse,
+                 mepoch |-> 3,
+                 mleader |-> Nil,
+                 mvoteGranted |-> TRUE,
+                 merror |-> Nil,
+                 src |-> n1,
+                 dst |-> n2 ] >> @@
+        n3 :>
+            << [ type |-> RequestVoteResponse,
+                 mepoch |-> 4,
+                 mleader |-> Nil,
+                 mvoteGranted |-> TRUE,
+                 merror |-> Nil,
+                 src |-> n1,
+                 dst |-> n3 ] >> ) @@
+  n2 :> (n1 :> <<>> @@ n3 :> <<>>) @@
+  n3 :>
+      ( n1 :> <<>> @@
+        n2 :>
+            << [ src |-> n3,
+                 dst |-> n2,
+                 type |-> RequestVoteRequest,
+                 mepoch |-> 4 ] >> ) )
+/\ leader = (n1 :> Nil @@ n2 :> n2 @@ n3 :> Nil)
+/\ inv = <<TRUE, TRUE>>
+/\ pendingFetch = (n1 :> Nil @@ n2 :> Nil @@ n3 :> Nil)
+/\ netcmd = <<<<"HandleMsgRV", "voted", n1, n3>>, <<"msg_reply", n1, n3>>>>
+/\ requestQueue = ( n1 :> (n1 :> {} @@ n2 :> {} @@ n3 :> {}) @@
+  n2 :> (n1 :> {} @@ n2 :> {} @@ n3 :> {}) @@
+  n3 :> (n1 :> {} @@ n2 :> {} @@ n3 :> {}) )
+/\ netman = [n_sent |-> 15, n_recv |-> 12, n_elec |-> 3, n_wire |-> 3, n_op |-> 0, n_ae |-> 0, no_inv |-> {}, n_cure |-> 0, n_part |-> 0, conn |-> <<{n1, n2, n3}>>]
+/\ currentEpoch = (n1 :> 4 @@ n2 :> 3 @@ n3 :> 4)
+/\ votedFor = (n1 :> n3 @@ n2 :> n2 @@ n3 :> n3)
+/\ error_act = 3
+/\ state = (n1 :> Voted @@ n2 :> Leader @@ n3 :> Candidate)
+/\ normal_act = 12
+/\ votesGranted = (n1 :> {} @@ n2 :> {n2, n3} @@ n3 :> {n3})
+
+
+\* <Next line 515, col 9 to line 533, col 33 of module Kafka>
+STATE_17 == 
+/\ msgs = ( n1 :>
+      ( n2 :>
+            << [ type |-> RequestVoteResponse,
+                 mepoch |-> 3,
+                 mleader |-> Nil,
+                 mvoteGranted |-> TRUE,
+                 merror |-> Nil,
+                 src |-> n1,
+                 dst |-> n2 ] >> @@
+        n3 :>
+            << [ type |-> RequestVoteResponse,
+                 mepoch |-> 4,
+                 mleader |-> Nil,
+                 mvoteGranted |-> TRUE,
+                 merror |-> Nil,
+                 src |-> n1,
+                 dst |-> n3 ] >> ) @@
+  n2 :>
+      ( n1 :> <<>> @@
+        n3 :>
+            << [ type |-> RequestVoteResponse,
+                 mepoch |-> 4,
+                 mleader |-> Nil,
+                 mvoteGranted |-> TRUE,
+                 merror |-> Nil,
+                 src |-> n2,
+                 dst |-> n3 ] >> ) @@
+  n3 :> (n1 :> <<>> @@ n2 :> <<>>) )
+/\ leader = (n1 :> Nil @@ n2 :> Nil @@ n3 :> Nil)
+/\ inv = <<TRUE, TRUE>>
+/\ pendingFetch = (n1 :> Nil @@ n2 :> Nil @@ n3 :> Nil)
+/\ netcmd = <<<<"HandleMsgRV", "voted", n2, n3>>, <<"msg_reply", n2, n3>>>>
+/\ requestQueue = ( n1 :> (n1 :> {} @@ n2 :> {} @@ n3 :> {}) @@
+  n2 :> (n1 :> {} @@ n2 :> {} @@ n3 :> {}) @@
+  n3 :> (n1 :> {} @@ n2 :> {} @@ n3 :> {}) )
+/\ netman = [n_sent |-> 16, n_recv |-> 13, n_elec |-> 3, n_wire |-> 3, n_op |-> 0, n_ae |-> 0, no_inv |-> {}, n_cure |-> 0, n_part |-> 0, conn |-> <<{n1, n2, n3}>>]
+/\ currentEpoch = (n1 :> 4 @@ n2 :> 4 @@ n3 :> 4)
+/\ votedFor = (n1 :> n3 @@ n2 :> n3 @@ n3 :> n3)
+/\ error_act = 3
+/\ state = (n1 :> Voted @@ n2 :> Voted @@ n3 :> Candidate)
+/\ normal_act = 13
+/\ votesGranted = (n1 :> {} @@ n2 :> {n2, n3} @@ n3 :> {n3})
+
+
+\* <Next line 515, col 9 to line 533, col 33 of module Kafka>
+STATE_18 == 
+/\ msgs = ( n1 :>
+      ( n2 :>
+            << [ type |-> RequestVoteResponse,
+                 mepoch |-> 3,
+                 mleader |-> Nil,
+                 mvoteGranted |-> TRUE,
+                 merror |-> Nil,
+                 src |-> n1,
+                 dst |-> n2 ] >> @@
+        n3 :>
+            << [ type |-> RequestVoteResponse,
+                 mepoch |-> 4,
+                 mleader |-> Nil,
+                 mvoteGranted |-> TRUE,
+                 merror |-> Nil,
+                 src |-> n1,
+                 dst |-> n3 ] >> ) @@
+  n2 :> (n1 :> <<>> @@ n3 :> <<>>) @@
+  n3 :>
+      ( n1 :> <<>> @@
+        n2 :>
+            << [ src |-> n3,
+                 dst |-> n2,
+                 type |-> BeginQuorumRequest,
+                 mepoch |-> 4 ] >> ) )
+/\ leader = (n1 :> Nil @@ n2 :> Nil @@ n3 :> n3)
+/\ inv = <<TRUE, TRUE>>
+/\ pendingFetch = (n1 :> Nil @@ n2 :> Nil @@ n3 :> Nil)
+/\ netcmd = << <<"HandleMsgRVR", "accept-one-and-beginQuorum", n3, n2>>,
+   <<"msg_reply", n3, n2>> >>
+/\ requestQueue = ( n1 :> (n1 :> {} @@ n2 :> {} @@ n3 :> {}) @@
+  n2 :> (n1 :> {} @@ n2 :> {} @@ n3 :> {}) @@
+  n3 :> (n1 :> {} @@ n2 :> {} @@ n3 :> {}) )
+/\ netman = [n_sent |-> 17, n_recv |-> 14, n_elec |-> 3, n_wire |-> 3, n_op |-> 0, n_ae |-> 0, no_inv |-> {}, n_cure |-> 0, n_part |-> 0, conn |-> <<{n1, n2, n3}>>]
+/\ currentEpoch = (n1 :> 4 @@ n2 :> 4 @@ n3 :> 4)
+/\ votedFor = (n1 :> n3 @@ n2 :> n3 @@ n3 :> n3)
+/\ error_act = 3
+/\ state = (n1 :> Voted @@ n2 :> Voted @@ n3 :> Leader)
+/\ normal_act = 14
+/\ votesGranted = (n1 :> {} @@ n2 :> {n2, n3} @@ n3 :> {n2, n3})
+
+
+\* <Next line 515, col 9 to line 533, col 33 of module Kafka>
+STATE_19 == 
+/\ msgs = ( n1 :>
+      ( n2 :>
+            << [ type |-> RequestVoteResponse,
+                 mepoch |-> 3,
+                 mleader |-> Nil,
+                 mvoteGranted |-> TRUE,
+                 merror |-> Nil,
+                 src |-> n1,
+                 dst |-> n2 ] >> @@
+        n3 :>
+            << [ type |-> RequestVoteResponse,
+                 mepoch |-> 4,
+                 mleader |-> Nil,
+                 mvoteGranted |-> TRUE,
+                 merror |-> Nil,
+                 src |-> n1,
+                 dst |-> n3 ] >> ) @@
+  n2 :>
+      ( n1 :> <<>> @@
+        n3 :>
+            << [ type |-> BeginQuorumResponse,
+                 mepoch |-> 4,
+                 src |-> n2,
+                 dst |-> n3,
+                 merror |-> Nil ] >> ) @@
+  n3 :> (n1 :> <<>> @@ n2 :> <<>>) )
+/\ leader = (n1 :> Nil @@ n2 :> n3 @@ n3 :> n3)
+/\ inv = <<TRUE, TRUE>>
+/\ pendingFetch = (n1 :> Nil @@ n2 :> Nil @@ n3 :> Nil)
+/\ netcmd = <<<<"HandleMsgBQ", "noerror", n2, n3>>, <<"msg_reply", n2, n3>>>>
+/\ requestQueue = ( n1 :> (n1 :> {} @@ n2 :> {} @@ n3 :> {}) @@
+  n2 :> (n1 :> {} @@ n2 :> {} @@ n3 :> {}) @@
+  n3 :> (n1 :> {} @@ n2 :> {} @@ n3 :> {}) )
+/\ netman = [n_sent |-> 18, n_recv |-> 15, n_elec |-> 3, n_wire |-> 3, n_op |-> 0, n_ae |-> 0, no_inv |-> {}, n_cure |-> 0, n_part |-> 0, conn |-> <<{n1, n2, n3}>>]
+/\ currentEpoch = (n1 :> 4 @@ n2 :> 4 @@ n3 :> 4)
+/\ votedFor = (n1 :> n3 @@ n2 :> n3 @@ n3 :> n3)
+/\ error_act = 3
+/\ state = (n1 :> Voted @@ n2 :> Follower @@ n3 :> Leader)
+/\ normal_act = 15
+/\ votesGranted = (n1 :> {} @@ n2 :> {n2, n3} @@ n3 :> {n2, n3})
+
+
+\* <Next line 515, col 9 to line 533, col 33 of module Kafka>
+STATE_20 == 
+/\ msgs = ( n1 :>
+      ( n2 :> <<>> @@
+        n3 :>
+            << [ type |-> RequestVoteResponse,
+                 mepoch |-> 4,
+                 mleader |-> Nil,
+                 mvoteGranted |-> TRUE,
+                 merror |-> Nil,
+                 src |-> n1,
+                 dst |-> n3 ] >> ) @@
+  n2 :>
+      ( n1 :> <<>> @@
+        n3 :>
+            << [ type |-> BeginQuorumResponse,
+                 mepoch |-> 4,
+                 src |-> n2,
+                 dst |-> n3,
+                 merror |-> Nil ] >> ) @@
+  n3 :> (n1 :> <<>> @@ n2 :> <<>>) )
+/\ leader = (n1 :> Nil @@ n2 :> n3 @@ n3 :> n3)
+/\ inv = <<TRUE, TRUE>>
+/\ pendingFetch = (n1 :> Nil @@ n2 :> Nil @@ n3 :> Nil)
+/\ netcmd = << <<"HandleMsgRVR", "not-candidate-or-term-not-equal", n2, n1>>,
+   <<"msg_del", n2, n1>> >>
+/\ requestQueue = ( n1 :> (n1 :> {} @@ n2 :> {} @@ n3 :> {}) @@
+  n2 :> (n1 :> {} @@ n2 :> {} @@ n3 :> {}) @@
+  n3 :> (n1 :> {} @@ n2 :> {} @@ n3 :> {}) )
+/\ netman = [n_wire |-> 2, n_recv |-> 16, n_sent |-> 18, n_elec |-> 3, n_op |-> 0, n_ae |-> 0, no_inv |-> {}, n_cure |-> 0, n_part |-> 0, conn |-> <<{n1, n2, n3}>>]
+/\ currentEpoch = (n1 :> 4 @@ n2 :> 4 @@ n3 :> 4)
+/\ votedFor = (n1 :> n3 @@ n2 :> n3 @@ n3 :> n3)
+/\ error_act = 3
+/\ state = (n1 :> Voted @@ n2 :> Follower @@ n3 :> Leader)
+/\ normal_act = 16
+/\ votesGranted = (n1 :> {} @@ n2 :> {n2, n3} @@ n3 :> {n2, n3})
+
+
+\* <Next line 515, col 9 to line 533, col 33 of module Kafka>
+STATE_21 == 
+/\ msgs = ( n1 :>
+      ( n2 :> <<>> @@
+        n3 :>
+            << [ type |-> RequestVoteResponse,
+                 mepoch |-> 4,
+                 mleader |-> Nil,
+                 mvoteGranted |-> TRUE,
+                 merror |-> Nil,
+                 src |-> n1,
+                 dst |-> n3 ] >> ) @@
+  n2 :> (n1 :> <<>> @@ n3 :> <<>>) @@
+  n3 :> (n1 :> <<>> @@ n2 :> <<>>) )
+/\ leader = (n1 :> Nil @@ n2 :> n3 @@ n3 :> n3)
+/\ inv = <<TRUE, TRUE>>
+/\ pendingFetch = (n1 :> Nil @@ n2 :> Nil @@ n3 :> Nil)
+/\ netcmd = <<<<"HandleMsgBQR", "get", n3, n2>>, <<"msg_del", n3, n2>>>>
+/\ requestQueue = ( n1 :> (n1 :> {} @@ n2 :> {} @@ n3 :> {}) @@
+  n2 :> (n1 :> {} @@ n2 :> {} @@ n3 :> {}) @@
+  n3 :> (n1 :> {} @@ n2 :> {} @@ n3 :> {}) )
+/\ netman = [n_wire |-> 1, n_recv |-> 17, n_sent |-> 18, n_elec |-> 3, n_op |-> 0, n_ae |-> 0, no_inv |-> {}, n_cure |-> 0, n_part |-> 0, conn |-> <<{n1, n2, n3}>>]
+/\ currentEpoch = (n1 :> 4 @@ n2 :> 4 @@ n3 :> 4)
+/\ votedFor = (n1 :> n3 @@ n2 :> n3 @@ n3 :> n3)
+/\ error_act = 3
+/\ state = (n1 :> Voted @@ n2 :> Follower @@ n3 :> Leader)
+/\ normal_act = 17
+/\ votesGranted = (n1 :> {} @@ n2 :> {n2, n3} @@ n3 :> {n2, n3})
+
+
+=================================================

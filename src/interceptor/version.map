@@ -4,7 +4,7 @@
         reg_func_dict;
         print_info_internal;
         # below are intercepted functions
-        #open;
+        open;
         send;
         sendto;
         socket;
@@ -19,7 +19,7 @@
         sendmsg;
         sendmmsg;
         sendfile;
-        #openat;
+        openat;
         accept4;
         #random;
         clock_gettime;
@@ -31,6 +31,13 @@
         read;
         recv;
         recvfrom;
+        fread;
+        fread64;
+        fwrite;
+        fwrite64;
+        fopen;
+        fopen64;
+        fclose;
     local:
         *;
 };

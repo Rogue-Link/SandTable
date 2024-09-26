@@ -53,7 +53,7 @@ struct Msg {
     string to_string() const {
         ostringstream oss;
         oss << std::hex << std::setfill('0');
-        const char *b = body();
+        const unsigned char *b = (const unsigned char *)body();
         for (size_t i = 0; i < size; i++) {
             oss << std::setw(2) << static_cast<unsigned>(b[i]);
         }

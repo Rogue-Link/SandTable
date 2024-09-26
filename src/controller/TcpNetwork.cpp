@@ -10,6 +10,8 @@
 #include <sys/sendfile.h>
 #include <netinet/tcp.h>
 #include <chrono>
+#include <fstream>
+#include <string>
 
 //DECLARE_bool(deliver_first_msg);
 DECLARE_bool(delay_connect);
@@ -23,6 +25,8 @@ DECLARE_bool(allow_msg_unordered);
 
 #define ROUTER_FD (-2)
 #define PENDING_FD (-3)
+
+vector<string> correlation_id_set;
 
 void TcpNetwork::run_epoll() {
     struct epoll_event events[max_events];
@@ -262,6 +266,7 @@ void TcpNetwork::do_receive(int fd) {
             // ok recv 1 msg
 //            cerr_warning << "Debug: INTO enqueue_msg" << endl;
             enqueue_msg(cf->second, msg);
+
         }
         if (size == -1) {
             if (errno != EAGAIN) {  // EAGAIN: no more data to recv
@@ -308,7 +313,63 @@ void TcpNetwork::enqueue_msg(const channel_status_t &cf, Msg &m) {
         cerr_detail << "TcpNetwork::enqueue_msg deliver the first msg" << endl;
         deliver_msg(cf.channel, &m);
         return;
+    } 
+    
+    // deliver NoRaft msgs
+    // correlation_id_set：
+    // type (1 bit) + correlation_id (8 bit) + src (1 bit) + dst (1 bit)
+    string api_key = m.to_string().substr(8, 4);
+    if (api_key != "0035" && api_key != "0034" && api_key != "0000"){
+        cerr_detail << "TcpNetwork::enqueue_msg deliver the NoRaft msg" << endl;
+        deliver_msg(cf.channel, &m);
+        return;
+    } else {
+        string msg_trace = TcpNetwork::channel_to_string(cf.channel);
+        string src = "0", dst = "0";
+        for(long unsigned int i = 0; i < msg_trace.size() - 1; i++){
+            if(msg_trace[i] == 'n'){
+                if (src == "0"){
+                    src = msg_trace[i + 1];
+                }
+                else {
+                    dst = msg_trace[i + 1];
+                }
+            }
+        }
+        if (src == "0" || dst == "0"){
+            assert(0);
+        }
+        if (api_key == "0034"){
+            string id_data = "0" + m.to_string().substr(16, 8) + src + dst;
+            correlation_id_set.push_back(id_data);
+            cerr_detail << "TcpNetwork::Enqueue VoteRequest msg" << endl;
+        } else if (api_key == "0035")
+        {
+            string id_data = "1" + m.to_string().substr(16, 8) + src + dst;
+            correlation_id_set.push_back(id_data);
+            cerr_detail << "TcpNetwork::Enqueue BeginQuorumRequest msg" << endl;
+        } else {
+            string correlation_id = m.to_string().substr(8, 8);
+            bool flag = false;
+            for(string i : correlation_id_set){
+                if(i.substr(1, 8) == correlation_id && i.substr(9, 1) == dst){
+                    flag = true;
+                    if(i[0] == '0'){
+                        cerr_detail << "TcpNetwork::Enqueue VoteResponse msg" << endl;
+                    } else {
+                        cerr_detail << "TcpNetwork::Enqueue BeginQuorumResponse msg" << endl;
+                    }
+                    break;
+                }
+            }
+            if(flag == false){
+                cerr_detail << "TcpNetwork::enqueue_msg deliver the NoRaft msg" << endl;
+                deliver_msg(cf.channel, &m);
+                return;
+            }
+        }
     }
+
     if (FLAGS_dump_msg) {
         cerr_detail << "Dump msg to enqueue: " << m.to_string() << endl;
     }
@@ -491,6 +552,12 @@ void TcpNetwork::transfer_unintercepted(int out_fd, int in_fd) {
     uint8_t buffer[1460];  // MSS: 1500(MTU)-20(IP)-20(TCP)
     ssize_t size, total = 0;
     while ((size = recv(in_fd, buffer, sizeof(buffer), MSG_DONTWAIT)) > 0) {
+        ostringstream oss;
+        oss << std::hex << std::setfill('0');
+        for (size_t i = 0; i < size_t(size); i++) {
+            oss << std::setw(2) << static_cast <unsigned> (buffer[i]);
+        }
+        cerr_detail << "Unintercepted msg: "<< oss.str() << endl;
         if (send(out_fd, buffer, size, MSG_DONTWAIT) == -1) {
             warn_syserror("transfer_unintercepted send");
 //            if (errno == EAGAIN)

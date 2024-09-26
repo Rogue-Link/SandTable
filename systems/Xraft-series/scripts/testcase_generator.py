@@ -142,7 +142,7 @@ def yield_trace(states):
     def compare(n, code_var_name, model_var_name, no_compare=False):
         pass  # do not compare in xraft
     def do_tick(n, is_compare=True):
-        yield ['sleep', '2000']  # sleep 2s to wait the node processing
+        yield ['sleep', '2000']  # sleep 1s to wait the node processing
     def deliver(src, dst):
         yield ['deliver', src, dst]
         # yield ['loop', 'intercept', dst, 'check_has_recv_queue', src]
@@ -215,7 +215,7 @@ def yield_trace(states):
                     # pass
                     yield ['intercept', comment[1], 'inc_time_ms', '10'] # > ? (logReplicationReadTimeout)
                     yield ['shell', '-nonblocking', cli_path, comment[1], 'put', comment[2]]
-                    yield ['sleep', '2000']  # wait it execute
+                    yield ['sleep', '10000']  # wait it execute
                 yield from do_tick(comment[1])
             elif cmd == 'msg_batch_add_reply':  # recv msg and batch send msgs
                 # yield ['deliver', parameters[1], parameters[0]]
@@ -224,7 +224,7 @@ def yield_trace(states):
         else:
             if comment[0] == 'Init':
                 yield ['init', str(i[0][1])]
-                yield ['sleep', '15000']  # sleep 15 seconds to wait nodes init
+                yield ['sleep', '20000']  # sleep 5 seconds to wait nodes init
                 # for j in nodes:
                 #     yield from do_tick(j)
             elif comment[0] == 'ClientGetValue':

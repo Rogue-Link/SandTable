@@ -161,7 +161,7 @@ __attribute__((constructor, unused))                  \
 static void CAT(reg_, name)() {                       \
     CLOCK_START_RECORD                                \
     CAT(LIB_, name) = NR_self_defined_func--;         \
-    register_intercepted(CAT(LIB_, name), STR(name), name, (void **)&(CAT(real_, name))); \
+    register_intercepted(CAT(LIB_, name), STR(name), (void *)name, (void **)&(CAT(real_, name))); \
     CLOCK_END_RECORD                                  \
 }                                                     \
 type name(args)

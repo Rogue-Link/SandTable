@@ -6,5 +6,4 @@
 #define MYSYSCALL_ROUTER_H
 
 int connect_router(const char *addr);
-
 #endif //MYSYSCALL_ROUTER_H

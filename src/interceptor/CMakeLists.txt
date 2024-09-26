@@ -9,8 +9,8 @@ add_compile_definitions(PRINT_STATISTICS)
 add_compile_definitions(NO_PRINT_TIME_SYSCALLS)
 #add_compile_definitions(TIMING_USE_REAL)  // use real wall time as real time
 add_compile_options(-O)  # optimize, such as inline
-add_compile_options(-Wall -Wextra -Werror)  # no -Wpedantic, it does not permit named variadic macros
-
+add_compile_options(-Wall -Wextra -Werror -Wno-pedantic )  # no -Wpedantic, it does not permit named variadic macros
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-permissive")
 # config files
 set(VERSION_FILE ${CMAKE_CURRENT_SOURCE_DIR}/version.map)
 set(CONFIG_FILE ${CMAKE_CURRENT_SOURCE_DIR}/config.txt)
@@ -22,11 +22,12 @@ set(RUN_SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/run.sh)
 # file order affects the init order (setting priorities of constructors may be better?)
 add_library(${LIB_NAME} SHARED mysyscall.c mysyscall.h myclock_gettime.c myclock_gettime.h mymallocfree.c myopen.c myopen.h myclose.c myclose.h mysocket.c mysocket.h
         myaccept.c myaccept.h myconnect.c myconnect.h mysendto.c mysendto.h mysend.c mysend.h mywrite.c mywrite.h
-        mysendmsg.c mysendmsg.h mysendfile.c mysendfile.h myopenat.c myopenat.h myaccept4.c myaccept4.h
+        mysendmsg.c mysendmsg.h mysendfile.c mysendfile.h myopenat.c myopenat.h myaccept4.c myaccept4.h 
+        myfread.c myfread.h myfread64.c myfread64.h myfwrite.c myfwrite.h myfwrite64.c myfwrite64.h myfopen.c myfopen.h myfopen64.c myfopen64.h myfclose.c myfclose.h myMap.cpp myMap.h 
         myrandom.c myrandom.h mygettimeofday.c mygettimeofday.h mytime.c mytime.h
         myclock_getres.c myclock_getres.h mysendmmsg.c mysendmmsg.h mywritev.c mywritev.h myrecv.c myrecv.h myrecvfrom.c myrecvfrom.h myrecvmsg.c myrecvmsg.h myread.c myread.h)
 # common.c must after config.c, and common.c should be the last one to init
-set_property(TARGET ${LIB_NAME} APPEND PROPERTY SOURCES timing.c timing.h state_collector.cpp state_collector.h router.cpp router.h config.cpp config.h common.c common.h)
+set_property(TARGET ${LIB_NAME} APPEND PROPERTY SOURCES timing.c timing.h state_collector.cpp state_collector.h router.cpp router.h  config.cpp config.h common.c common.h)
 # use version map to expose symbols
 set_target_properties(${LIB_NAME} PROPERTIES LINK_DEPENDS "${VERSION_FILE}")
 # --version-script: define global symbols to export

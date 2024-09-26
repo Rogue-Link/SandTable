@@ -116,6 +116,7 @@ function repl {
         exit 1
     fi
 }
+tmux set-option -g history-limit 10000000
 
 function usage() {
     cat <<EOF
@@ -334,7 +335,7 @@ if [ "$XTERM" = "tmux" ]; then
     if test "$TMUX_RUN_HOST_CMD"; then
         tmux split-window -t "$SESSION:0" $TMUX_HOST_SHELL
         if test -n "$TMUX_SAVE_OUTPUT"; then
-            TMUX_SAVE_CMD='trap "tmux capture-pane -pJS - -t $TMUX_PANE > log.host" EXIT'
+            TMUX_SAVE_CMD='tmux set-option -g history-limit 10000000; trap "tmux capture-pane -pJS - -t $TMUX_PANE > log.host" EXIT'
             tmux send-keys -t "$SESSION:0" "$TMUX_SAVE_CMD" C-m
             if test "$KILLHOST"; then
                 KILLHOST="sleep 0.1; $KILLHOST"
@@ -452,7 +453,7 @@ while test "$#" -gt 0; do
     NAME=$(echo "$1" | grep -o '[^ ]*@[^ ]*' | head -1 | tr '.' '_')_${TMPFIFO##*.}
     case "$XTERM" in
         tmux)
-            tmux new-window -d -t "$SESSION" -n "$NAME" "$CMD$TMUX_SAVE_CMD"
+            tmux new-window -d -t "$SESSION" -n "$NAME" "tmux set-option -g history-limit 10000000; $CMD$TMUX_SAVE_CMD"
             ;;
         gnome-terminal)
             eval $XTERM --geometry="$GEOMETRY" --title="$NAME" -- $CMD & sleep 0.1

@@ -20,6 +20,8 @@
 #include <concurrentqueue/blockingconcurrentqueue.h>
 using namespace moodycamel;
 
+extern vector<string> correlation_id_set;
+
 struct ChannelMsgs {
     BlockingConcurrentQueue<Msg> msgs;
 //    BlockingReaderWriterQueue<Msg> msgs;

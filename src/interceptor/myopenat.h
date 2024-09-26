@@ -7,6 +7,6 @@
 
 #include <sys/types.h>
 
-int openat(int dirfd, const char *pathname, int flags, mode_t mode);
+int openat(int dirfd, const char *pathname, int flags, ...);
 
 #endif //MYSYSCALL_MYOPENAT_H

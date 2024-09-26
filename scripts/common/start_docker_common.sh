@@ -1,6 +1,6 @@
 #!/bin/bash
 
-TIMEOUT=60
+TIMEOUT=600
 
 function usage() {
     echo "Usage: start.sh trace_xxx.dir"

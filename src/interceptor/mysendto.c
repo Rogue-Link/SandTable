@@ -17,6 +17,7 @@ MAKE_SYS_TEMPLATE(ssize_t, sendto, int sockfd, const void *buf, size_t len, int 
                   const struct sockaddr *dest_addr, socklen_t addrlen)
 {
     CLOCK_START_RECORD;
+    LOG_INTERCEPTED(nr_send_syscall, "length of msg: %d", len);
     if (!check_intercept(SYS_sendto))
         return real_sendto(sockfd, buf, len, flags, dest_addr, addrlen);
 
